@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<!-- 绑定接口：配置文件 -->
+<mapper namespace="com.icss.dao.BillMapper">
+	<!-- 结果集：将数据库中查询的数据放到结果集中 -->
+	<resultMap id="BaseResultMap" type="com.icss.vo.Bill">
+		<id column="bid" property="bid" jdbcType="INTEGER"/>
+		<result column="billname" property="billname" jdbcType="VARCHAR"/>
+		<result column="price" property="price" jdbcType="INTEGER"/>
+		<result column="num" property="num" jdbcType="INTEGER"/>
+		<result column="proid" property="proid" jdbcType="INTEGER"/>
+		<result column="money" property="money" jdbcType="INTEGER"/>
+		<result column="status" property="status" jdbcType="VARCHAR"/>
+		<result column="createtime" property="createtime" jdbcType="DATE"/>
+		</resultMap>
+		
+	
+		
+		<!-- 一对多	 -->
+		<!-- <collection property="bill" ofType="com.icss.vo.Bill">
+			<result column="billname" property="billname" jdbcType="VARCHAR"/>
+		</collection> -->
+	
+
+		<select id="selectBill" resultMap="BaseResultMap" parameterType="com.icss.vo.Bill">
+		select bid,billname,price,num,proid,money,status,createtime from bill where
+		<trim suffixOverrides="and">
+			<if test="billname!=null">
+				 billname like concat(concat('%',#{billname}),'%') and
+			</if>
+			<if test="status!=0">
+				 status like concat(concat('%',#{status}),'%')
+			</if>
+		</trim>
+		
+	   </select>
+	   
+	   <select id="selectBillAll" resultMap="BaseResultMap" >
+		select bid,billname,price,num,proid,money,status,createtime from bill 
+	   </select>
+ 	<insert id="addBill" parameterType="com.icss.vo.Bill">
+		insert into bill values(
+		bill_seq.nextval,
+		#{billname,jdbcType=VARCHAR},
+		#{price,jdbcType=INTEGER},
+		#{num,jdbcType=INTEGER},
+		#{proid,jdbcType=INTEGER},
+		#{money,jdbcType=INTEGER},
+		#{status,jdbcType=VARCHAR},
+		sysdate
+		)
+	</insert> 
+	
+	<delete id="deleteBill" parameterType="java.lang.Integer">
+		delete from bill where bid = #{bid,jdbcType=INTEGER}
+	</delete>
+	
+	<select id="updateSelect" resultMap="BaseResultMap" parameterType="java.lang.Integer">
+		select bid,billname,price,num,proid,money,status from bill where bid = #{bid,jdbcType=INTEGER}
+	</select>
+	
+	
+	<select id="selectById" resultMap="BaseResultMap" parameterType="java.lang.Integer">
+		select bid,billname,price,num,proid,money,status,createtime from bill where bid = #{bid,jdbcType=INTEGER}
+	</select>
+	
+	
+	<update id="updateBill" parameterType="com.icss.vo.Bill">
+	 update bill set 
+	 billname = #{billname,jdbcType=VARCHAR},
+	 price = #{price,jdbcType=INTEGER},
+	 num = #{num,jdbcType=INTEGER},
+	 money = #{money,jdbcType=INTEGER},
+	 status = #{status,jdbcType=VARCHAR} 
+	 where bid = #{bid,jdbcType=INTEGER}
+	</update>
+</mapper>

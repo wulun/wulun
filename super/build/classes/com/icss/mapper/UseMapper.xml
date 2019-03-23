@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.icss.dao.UseMapper">
+	<resultMap id="BaseResultMap" type="com.icss.vo.Use">
+		<result column="usename"  property="usename" jdbcType="VARCHAR"></result>
+		<result column="password"  property="password" jdbcType="VARCHAR"></result>
+		<result column="position"  property="position" jdbcType="VARCHAR"></result>
+	
+	</resultMap>
+
+
+	<sql id="base_use_info">
+		(useid,usename,password,sex,age,birthday,tel,useaddress,position)
+	</sql>	
+	
+	<!-- 查询所有 -->
+	
+	<select id="selectAllUse" resultType="com.icss.vo.Use" parameterType="com.icss.vo.Use">
+		select *from use
+	
+	</select>
+	<!-- 查询中数据条数 -->
+	<select id="selectUseTotal" resultType="int" parameterType="com.icss.vo.Use">
+		select nvl(count(*),0) from use
+	</select>
+	<select id="selectPage" resultType="com.icss.vo.Use" parameterType="com.icss.vo.Page">       
+								<!-- curr  每页有几条数据       paganu当前第几页 -->       <!--     2           7 -->
+		select * from (select u.*,rownum rn from use u where  rownum &lt;= #{pageNum,jdbcType=INTEGER} * #{curr,jdbcType=INTEGER} )
+		 where rn &gt; (#{pageNum,jdbcType=INTEGER} - 1) * #{curr,jdbcType=INTEGER}
+	
+	</select>
+	
+	
+	<!-- 通过ID查询 -->
+	<select id="selectById" resultType="com.icss.vo.Use" parameterType="com.icss.vo.Use">
+		select *from use where useid=#{useid,jdbcType=INTEGER}
+	</select>
+	<!-- 通过名字查询 -->
+	<select id="selectByName" resultType="com.icss.vo.Use" parameterType="com.icss.vo.Use">
+		select* from use where usename=#{usename,jdbcType=VARCHAR}
+		
+	</select>
+	<!-- 添加 -->
+	<insert id="insertUse"  parameterType="com.icss.vo.Use">
+		<selectKey resultType="Integer" order="BEFORE">
+		
+			select use_seq.nextval as useid from dual
+		</selectKey>
+		insert into use
+	 	<include refid="base_use_info"></include> 
+		values(
+		 #{useid,jdbcType=INTEGER},
+		 #{usename,jdbcType=VARCHAR},
+		 #{password,jdbcType=VARCHAR},
+		 #{sex,jdbcType=VARCHAR},
+		 #{age,jdbcType=INTEGER},
+		 #{birthday,jdbcType=DATE},
+		 #{tel,jdbcType=VARCHAR},
+		 #{useaddress,jdbcType=VARCHAR},
+		 #{position,jdbcType=VARCHAR}	
+		)
+	
+	</insert>
+	<!-- 修改 -->
+	<update id="updateUse" parameterType="com.icss.vo.Use">
+		update use set
+		usename= #{usename,jdbcType=VARCHAR},
+		password=#{password,jdbcType=VARCHAR},
+		sex= #{sex,jdbcType=VARCHAR},
+		age= #{age,jdbcType=INTEGER},
+		birthday= #{birthday,jdbcType=DATE},
+		tel= #{tel,jdbcType=VARCHAR},
+		useaddress= #{useaddress,jdbcType=VARCHAR},
+		position= #{position,jdbcType=VARCHAR}	
+		where useid= #{useid,jdbcType=INTEGER}
+		
+	</update>
+	
+	<!-- 删除 -->
+	<delete id="deleteUse" parameterType="com.icss.vo.Use">
+		delete from use where useid=#{useid,jdbcType=INTEGER}
+	</delete>
+	
+	
+	<!-- 登录 -->
+	<select id="login" resultMap="BaseResultMap" parameterType="com.icss.vo.Use">
+		select useid,usename,password,position from use where usename=#{usename} and password=#{password}
+	
+	</select>
+	<!-- 修改密码 -->
+	<update id="updatePassword" parameterType="com.icss.vo.Use">
+		update use set password=#{password,jdbcType=VARCHAR} where useid=#{useid,jdbcType=INTEGER}
+	</update>
+	 
+
+
+</mapper>

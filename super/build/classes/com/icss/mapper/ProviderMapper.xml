@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<!-- 绑定接口：配置文件 -->
+<mapper namespace="com.icss.dao.ProviderMapper">
+	<resultMap id="Map1" type="com.icss.vo.Provider">
+		<id column="proid" property="proid" jdbcType="INTEGER"></id>
+		<result column="providername" property="providername" jdbcType="VARCHAR"></result>
+		<result column="contacts" property="contacts" jdbcType="VARCHAR"></result>
+		<result column="tel" property="tel" jdbcType="VARCHAR"></result>
+		<result column="fax" property="fax" jdbcType="VARCHAR"></result>
+		<result column="createtime" property="createtime" jdbcType="DATE"></result>
+		<result column="proaddress" property="proaddress" jdbcType="VARCHAR"></result>
+		<result column="describe" property="describe" jdbcType="VARCHAR"></result>
+	</resultMap>
+
+	<select id="selectAllProvider" resultMap="Map1">
+		select *
+		from
+		provider
+	</select>
+
+	<insert id="insertProvider" parameterType="com.icss.vo.Provider">
+		insert into provider
+		(proid,providername,contacts,tel,fax,createtime,proaddress,describe)
+		values
+		(
+		#{proid,jdbcType=INTEGER},
+		#{providername,jdbcType=VARCHAR},
+		#{contacts,jdbcType=VARCHAR},
+		#{tel,jdbcType=VARCHAR},
+		#{fax,jdbcType=VARCHAR},
+		SYSDATE,
+		#{proaddress,jdbcType=VARCHAR},
+		#{describe,jdbcType=VARCHAR}
+		)
+	</insert>
+
+	<delete id="deleteProviderById" parameterType="java.lang.Integer">
+		delete from provider
+		where 
+		proid = #{proid,jdbcType=INTEGER}
+	</delete>
+	
+	<!--查询单个供应商  -->
+	<select id="selectById" resultMap="Map1" parameterType="java.lang.Integer">
+		select  * 
+		from provider
+		where
+		proid = #{proid,jdbcType=INTEGER}
+	</select>
+	
+	<update id="updateProviderTrue" parameterType="com.icss.vo.Provider">
+		update provider
+		set 
+		providername = #{providername,jdbcType=VARCHAR},
+		contacts = #{contacts,jdbcType=VARCHAR},
+		tel = #{tel,jdbcType=VARCHAR},
+		fax = #{fax,jdbcType=VARCHAR},
+		proaddress = #{proaddress,jdbcType=VARCHAR},
+		describe = #{describe,jdbcType=VARCHAR}
+		where proid = #{proid,jdbcType=INTEGER}
+	</update>
+
+</mapper>
